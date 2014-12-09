@@ -1,21 +1,27 @@
-/* jshint sub:true */
+/* jshint sub: true */
+/* jshint browser: true*/
+/* global THREE:true */
+/* global dat: true*/
+'use strict';
+
 
 // main.js
 var scene, camera, controls, renderer;
+
+var clock = new THREE.Clock();
 
 // Paths
 var path = "images/";
 var modelPath = "models/";
 
-// Skybox Texture
-// var skyboxImages = [
-//   path + "px.png",
-//   path + "nx.png",
-//   path + "py.png",
-//   path + "ny.png",
-//   path + "pz.png",
-//   path + "nz.png"
-// ];
+var skyboxImages = [
+  path + "px.jpg",
+  path + "nx.jpg",
+  path + "py.jpg",
+  path + "ny.jpg",
+  path + "pz.jpg",
+  path + "nz.jpg"
+];
 
 // Ground texture
 var groundTexturePath = path + 'grid.png';
@@ -46,22 +52,10 @@ function init() {
   //  CAMERA                                                                  //
   //////////////////////////////////////////////////////////////////////////////
 
-  var VIEW_ANGLE = 45,
-      ASPECT = WIDTH/HEIGHT,
-      NEAR = 0.1,
-      FAR = 20000;
-
-  // Add a perspective camera to the scene
-  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(50, 60, 470);
-  camera.up = new THREE.Vector3(0,1,0);
-  camera.lookAt(new THREE.Vector3(0,0,0));
-  scene.add(camera);
-
   // Resize everything when the window resizes
   window.addEventListener('resize', function() {
     var WIDTH = window.innerWidth,
-    HEIGHT = window.innerHeight;
+        HEIGHT = window.innerHeight;
     renderer.setSize(WIDTH, HEIGHT);
     camera.aspect = WIDTH / HEIGHT;
     camera.updateProjectionMatrix();
@@ -71,7 +65,7 @@ function init() {
   //////////////////////////////////////////////////////////////////////////////
   //  SKYBOX                                                                  //
   //////////////////////////////////////////////////////////////////////////////
-/*
+
   // Loads the skybox texture
   var cubeMap = THREE.ImageUtils.loadTextureCube(skyboxImages);
 
@@ -90,7 +84,7 @@ function init() {
   var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
 
   scene.add(skybox);
-*/
+
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -98,8 +92,11 @@ function init() {
   //////////////////////////////////////////////////////////////////////////////
 
   var loader = new THREE.ObjectLoader();
-  loader.load(modelPath + "crytek-sponza.scene",function ( obj ) {
-    scene = obj;
+  loader.load(modelPath + "crytek-sponza.scene/crytek-sponza-v-ray-speed-tests-gamma.json",function ( obj ) {
+  // loader.load(modelPath + "scene.json",function ( obj ) {
+    scene.add(obj);
+    camera = scene.getObjectByName("TurnTableCamera", true);
+    setupControls(camera);
   });
 
 
@@ -166,37 +163,42 @@ function init() {
   //  LIGHTS                                                                  //
   //////////////////////////////////////////////////////////////////////////////
 
-  var directionalLight = new THREE.DirectionalLight(0xFFFBE2, 0.8);
-  directionalLight.position.set(128, 256, 128);
-  directionalLight.castShadow = true;
-  directionalLight.shadowMapWidth = 2048;
-  directionalLight.shadowMapHeight = 2048;
-
-  var d = 512;
-
-  directionalLight.shadowCameraLeft = -d;
-  directionalLight.shadowCameraRight = d;
-  directionalLight.shadowCameraTop = d;
-  directionalLight.shadowCameraBottom = -d;
-
-  directionalLight.shadowCameraFar = 3500;
-  directionalLight.shadowBias = -0.0001;
-  directionalLight.shadowDarkness = 0.7;
+  // var directionalLight = new THREE.DirectionalLight(0xFFFBE2, 0.8);
+  // directionalLight.position.set(128, 256, 128);
+  // directionalLight.castShadow = true;
+  // directionalLight.shadowMapWidth = 2048;
+  // directionalLight.shadowMapHeight = 2048;
+  //
+  // var d = 512;
+  //
+  // directionalLight.shadowCameraLeft = -d;
+  // directionalLight.shadowCameraRight = d;
+  // directionalLight.shadowCameraTop = d;
+  // directionalLight.shadowCameraBottom = -d;
+  //
+  // directionalLight.shadowCameraFar = 3500;
+  // directionalLight.shadowBias = -0.0001;
+  // directionalLight.shadowDarkness = 0.7;
 
   // directionalLight.shadowCameraVisible = true;
 
-  scene.add(directionalLight);
+  // scene.add(directionalLight);
 
-  var hemisphereLight = new THREE.HemisphereLight(0x363636, 0x363636, 1);
-  scene.add(hemisphereLight);
+  // var hemisphereLight = new THREE.HemisphereLight(0x363636, 0x363636, 1);
+  // scene.add(hemisphereLight);
 
 
   //////////////////////////////////////////////////////////////////////////////
   //  CONTROLS                                                                //
   //////////////////////////////////////////////////////////////////////////////
 
-  // Orbit controlls from http://threejs.org/examples/#misc_controls_orbit
-  // controls = new THREE.OrbitControls(camera, renderer.domElement);
+  function setupControls(camera) {
+    controls = new THREE.FirstPersonControls(camera, renderer.domElement);
+    controls.activeLook = true;
+    controls.lookSpeed = 0.05;
+    controls.movementSpeed = 300;
+    controls.lookVertical = true;
+  }
 
   var DepthOfField = function() {
     this.enableDoF = true;
@@ -221,5 +223,5 @@ function animate() {
   requestAnimationFrame(animate);
 
   renderer.render(scene, camera);
-  // controls.update();
+  controls.update(clock.getDelta());
 }
