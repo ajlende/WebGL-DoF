@@ -76,7 +76,7 @@ function init() {
 
 
   //////////////////////////////////////////////////////////////////////////////
-  //  SKYBOX                                                                  //
+  //  SKYBOX [DISABLED]                                                       //
   //////////////////////////////////////////////////////////////////////////////
 
   // Loads the skybox texture
@@ -103,12 +103,13 @@ function init() {
   //  OBJECTS/GEOMETRY                                                        //
   //////////////////////////////////////////////////////////////////////////////
 
-  loadScene();
+  loadScene(scene);
 
 
   //////////////////////////////////////////////////////////////////////////////
   //  LIGHTS                                                                  //
   //////////////////////////////////////////////////////////////////////////////
+
   var directionalLight = new THREE.DirectionalLight(0xFFFFE4, 2);
   directionalLight.shadowCameraVisible = true;
   directionalLight.castShadow = true;
@@ -144,21 +145,20 @@ function init() {
   //  CONTROLS                                                                //
   //////////////////////////////////////////////////////////////////////////////
 
-  controls = new THREE.FirstPersonControls(camera, renderer.domElement);
-  controls.activeLook = true;
-  controls.lookSpeed = 0.05;
-  controls.movementSpeed = 300;
-  controls.lookVertical = false;
+  // controls = new THREE.FirstPersonControls(camera, renderer.domElement);
+  // controls.activeLook = true;
+  // controls.lookSpeed = 0.05;
+  // controls.movementSpeed = 300;
+  // controls.lookVertical = false;
+
+  controls = new THREE.PointerLockControls( camera );
+  scene.add( controls.getObject() );
 
   var DepthOfField = function() {
     this.enableDoF = true;
     this.focus = 1.0;
     this.aperture = 0.025;
     this.maxblur = 1.0;
-    // this.speed = 0.8;
-    // this.displayOutline = false;
-    // this.explode = function() { ... };
-    // Define render logic ...
   };
 
   var matChanger = function( effectController ) {
@@ -174,14 +174,11 @@ function init() {
     gui.add(dof, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger(dof) );
     gui.add(dof, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger(dof) );
     gui.add(dof, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger(dof) );
-    // gui.add(dof, 'speed', -5, 5);
-    // gui.add(dof, 'displayOutline');
-    // gui.add(text, 'explode');
   };
 
 }
 
-function loadScene() {
+function loadScene(scene) {
 
   loader = new THREE.BinaryLoader( true );
   loader.statusDomElement.style.fontSize = "2em";
@@ -195,24 +192,24 @@ function loadScene() {
   loader.showProgress =true;
   loader.load( 'models/sponza/sponza.js', callbackFinished, 'models/sponza/textures/' );
 
-}
+  function callbackFinished( geometry, materials ) {
 
-function callbackFinished( geometry, materials ) {
+    var faceMaterial = new THREE.MeshFaceMaterial();
+    faceMaterial.materials = materials;
 
-  var faceMaterial = new THREE.MeshFaceMaterial();
-  faceMaterial.materials = materials;
+    var mesh = new THREE.Mesh( geometry, faceMaterial );
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
 
-  var mesh = new THREE.Mesh( geometry, faceMaterial );
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
+    scene.add( mesh );
+    loader.statusDomElement.style.display = "none";
+  }
 
-  scene.add( mesh );
-  loader.statusDomElement.style.display = "none";
 }
 
 function initPostProcessing() {
   var composer = new THREE.EffectComposer(renderer);
-  var renderPass = new THREE.RenderPass( scene, camera );
+  var renderPass = new THREE.RenderPass(scene, camera);
   var bokehPass = new THREE.BokehPass(scene, camera, {
     focus: 1.0,
     aperture:	0.025,
@@ -235,5 +232,6 @@ function animate() {
   // renderer.render(scene, camera);
   postprocessing.composer.render( 0.1 );
 
+  controls.isOnObject( false );
   controls.update(clock.getDelta());
 }
