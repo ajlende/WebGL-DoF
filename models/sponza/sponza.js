@@ -1,18 +1,17 @@
 {
+	"metadata" :
+	{
+	"formatVersion" : 3.1,
+	"sourceFile"    : "sponza.obj",
+	"generatedBy"   : "OBJConverter",
+	"vertices"      : 153635,
+	"faces"         : 143842,
+	"normals"       : 147510,
+	"uvs"           : 91964,
+	"materials"     : 26
+	},
 
-    "metadata" :
-    {
-        "formatVersion" : 3.1,
-        "sourceFile"    : "sponza.obj",
-        "generatedBy"   : "OBJConverter",
-        "vertices"      : 153635,
-        "faces"         : 143842,
-        "normals"       : 147510,
-        "uvs"           : 91964,
-        "materials"     : 26
-    },
-
-    "materials": [	{
+	"materials": [	{
 	"DbgColor" : 15658734,
 	"DbgIndex" : 0,
 	"DbgName" : "leaf",
@@ -82,11 +81,12 @@
 	},
 
 	{
-	"DbgColor" : 15658496,
+	"DbgColor" : 986139,
 	"DbgIndex" : 4,
 	"DbgName" : "16___Default",
-  "visible": false,
-  "transparent" : true
+	"visible": true,
+	"shading": "lambert",
+	"transparent" : true
 	},
 
 	{
@@ -98,14 +98,14 @@
 	"colorSpecular" : [0.0, 0.0, 0.0],
 	"illumination" : 2,
 	"mapSpecular" : "spnza_bricks_a_spec.png",
-  "mapSpecularRepeat": true,
-  "mapSpecularWrap": true,
+	"mapSpecularRepeat": true,
+	"mapSpecularWrap": true,
 	"mapNormal" : "spnza_bricks_a_ddn.png",
-  "mapNormalRepeat": true,
-  "mapNormalWrap": true,
+	"mapNormalRepeat": true,
+	"mapNormalWrap": true,
 	"mapDiffuse" : "spnza_bricks_a_diff.png",
-  "mapDiffuseRepeat": true,
-  "mapDiffuseWrap": true,
+	"mapDiffuseRepeat": true,
+	"mapDiffuseWrap": true,
 	"opticalDensity" : 1.5,
 	"specularCoef" : 10.0
 	},
@@ -119,14 +119,14 @@
 	"colorSpecular" : [0.0, 0.0, 0.0],
 	"illumination" : 2,
 	"mapSpecular" : "sponza_arch_spec.png",
-  "mapSpecularRepeat": true,
-  "mapSpecularWrap": true,
+	"mapSpecularRepeat": true,
+	"mapSpecularWrap": true,
 	"mapNormal" : "sponza_arch_ddn.png",
-  "mapNormalRepeat": true,
-  "mapNormalWrap": true,
+	"mapNormalRepeat": true,
+	"mapNormalWrap": true,
 	"mapDiffuse" : "sponza_arch_diff.png",
-  "mapDiffuseRepeat": true,
-  "mapDiffuseWrap": true,
+	"mapDiffuseRepeat": true,
+	"mapDiffuseWrap": true,
 	"opticalDensity" : 1.5,
 	"specularCoef" : 10.0
 	},
@@ -139,13 +139,10 @@
 	"colorDiffuse" : [0.588, 0.588, 0.588],
 	"colorSpecular" : [0.0, 0.0, 0.0],
 	"illumination" : 0,
-  
 	"mapSpecular" : "sponza_ceiling_a_spec.png",
-  "mapSpecularRepeat": true,
-  "mapSpecularWrap": true,
+	"mapSpecularWrap": true,
 	"mapDiffuse" : "sponza_ceiling_a_diff.png",
-  "mapDiffuseRepeat": true,
-  "mapDiffuseWrap": true,
+	"mapDiffuseRepeat": true,
 	"opticalDensity" : 1.5,
 	"specularCoef" : 10.0
 	},
@@ -159,14 +156,14 @@
 	"colorSpecular" : [0.0, 0.0, 0.0],
 	"illumination" : 2,
 	"mapSpecular" : "sponza_column_a_spec.png",
-  "mapSpecularRepeat": true,
-  "mapSpecularWrap": true,
+	"mapSpecularRepeat": true,
+	"mapSpecularWrap": true,
 	"mapNormal" : "sponza_column_a_ddn.png",
-  "mapNormalRepeat": true,
-  "mapNormalWrap": true,
+	"mapNormalRepeat": true,
+	"mapNormalWrap": true,
 	"mapDiffuse" : "sponza_column_a_diff.png",
-  "mapDiffuseRepeat": true,
-  "mapDiffuseWrap": true,
+	"mapDiffuseRepeat": true,
+	"mapDiffuseWrap": true,
 	"opticalDensity" : 1.5,
 	"specularCoef" : 10.0
 	},
@@ -175,18 +172,18 @@
 	"DbgColor" : 10128841,
 	"DbgIndex" : 9,
 	"DbgName" : "floor",
-  "shading": "phong",
+	"shading": "phong",
 	"colorAmbient" : [0.588, 0.588, 0.588],
 	"colorDiffuse" : [0.588, 0.588, 0.588],
 	"colorSpecular" : [0.0, 0.0, 0.0],
 	"illumination" : 2,
-  "mapNormal": true,
+	"mapNormal": true,
 	"mapSpecular" : "sponza_floor_a_spec.png",
-  "mapSpecularRepeat": true,
-  "mapSpecularWrap": true,
+	"mapSpecularRepeat": true,
+	"mapSpecularWrap": true,
 	"mapDiffuse" : "sponza_floor_a_diff.png",
-  "mapDiffuseRepeat": true,
-  "mapDiffuseWrap": true,
+	"mapDiffuseRepeat": true,
+	"mapDiffuseWrap": true,
 	"opticalDensity" : 1.5,
 	"specularCoef" : 10.0
 	},
@@ -418,6 +415,6 @@
 	"specularCoef" : 10.0
 	}],
 
-    "buffers": "sponza.bin"
+	"buffers": "sponza.bin"
 
 }

@@ -44,9 +44,9 @@ THREE.BinaryLoader.prototype.loadAjaxJSON = function ( context, url, callback, t
 
 	xhr.onreadystatechange = function () {
 
-		if ( xhr.readyState == 4 ) {
+		if ( xhr.readyState === 4 ) {
 
-			if ( xhr.status == 200 || xhr.status == 0 ) {
+			if ( xhr.status === 200 || xhr.status === 0 ) {
 
 				var json = JSON.parse( xhr.responseText );
 				context.loadAjaxBuffers( json, callback, binaryPath, texturePath, callbackProgress );
@@ -84,7 +84,7 @@ THREE.BinaryLoader.prototype.loadAjaxBuffers = function ( json, callback, binary
 
 		}
 
-		if ( buffer.byteLength == 0 ) {  // iOS and other XMLHttpRequest level 1
+		if ( buffer.byteLength === 0 ) {  // iOS and other XMLHttpRequest level 1
 
 			var buffer = new ArrayBuffer( xhr.responseText.length );
 
@@ -153,12 +153,12 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 		md = parseMetaData( data, currentOffset );
 
 		currentOffset += md.header_bytes;
-/*
+
 		md.vertex_index_bytes = Uint32Array.BYTES_PER_ELEMENT;
 		md.material_index_bytes = Uint16Array.BYTES_PER_ELEMENT;
 		md.normal_index_bytes = Uint32Array.BYTES_PER_ELEMENT;
 		md.uv_index_bytes = Uint32Array.BYTES_PER_ELEMENT;
-*/
+
 		// buffers sizes
 
 		tri_size =  md.vertex_index_bytes * 3 + md.material_index_bytes;
@@ -216,7 +216,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return ( n % 4 ) ? ( 4 - n % 4 ) : 0;
 
-		};
+		}
 
 		function parseMetaData( data, offset ) {
 
@@ -249,7 +249,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 				'nquad_smooth_uv' :parseUInt32( data, offset + 20 + 4*10 )
 
 			};
-/*
+
 			console.log( "signature: " + metaData.signature );
 
 			console.log( "header_bytes: " + metaData.header_bytes );
@@ -289,11 +289,11 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 					  + metaData.nquad_flat_uv * ( metaData.vertex_index_bytes*4 + metaData.material_index_bytes + metaData.uv_index_bytes*4 )
 					  + metaData.nquad_smooth_uv * ( metaData.vertex_index_bytes*4 + metaData.material_index_bytes + metaData.normal_index_bytes*4 + metaData.uv_index_bytes*4 );
 			console.log( "total bytes: " + total );
-*/
+
 
 			return metaData;
 
-		};
+		}
 
 		function parseString( data, offset, length ) {
 
@@ -309,7 +309,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return text;
 
-		};
+		}
 
 		function parseUChar8( data, offset ) {
 
@@ -317,7 +317,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return charArray[ 0 ];
 
-		};
+		}
 
 		function parseUInt32( data, offset ) {
 
@@ -325,7 +325,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return intArray[ 0 ];
 
-		};
+		}
 
 		function init_vertices( start ) {
 
@@ -347,7 +347,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return nElements * 3 * Float32Array.BYTES_PER_ELEMENT;
 
-		};
+		}
 
 		function init_normals( start ) {
 
@@ -373,7 +373,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return nElements * 3 * Int8Array.BYTES_PER_ELEMENT;
 
-		};
+		}
 
 		function init_uvs( start ) {
 
@@ -398,7 +398,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			return nElements * 2 * Float32Array.BYTES_PER_ELEMENT;
 
-		};
+		}
 
 		function init_uvs3( nElements, offset ) {
 
@@ -429,7 +429,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_uvs4( nElements, offset ) {
 
@@ -470,7 +470,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_faces3_flat( nElements, offsetVertices, offsetMaterials ) {
 
@@ -491,7 +491,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_faces4_flat( nElements, offsetVertices, offsetMaterials ) {
 
@@ -514,7 +514,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_faces3_smooth( nElements, offsetVertices, offsetNormals, offsetMaterials ) {
 
@@ -557,7 +557,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_faces4_smooth( nElements, offsetVertices, offsetNormals, offsetMaterials ) {
 
@@ -612,7 +612,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_triangles_flat( start ) {
 
@@ -625,7 +625,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_triangles_flat_uv( start ) {
 
@@ -641,7 +641,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_triangles_smooth( start ) {
 
@@ -656,7 +656,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_triangles_smooth_uv( start ) {
 
@@ -673,7 +673,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_quads_flat( start ) {
 
@@ -686,7 +686,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_quads_flat_uv( start ) {
 
@@ -702,7 +702,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_quads_smooth( start ) {
 
@@ -717,7 +717,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 		function init_quads_smooth_uv( start ) {
 
@@ -734,7 +734,7 @@ THREE.BinaryLoader.prototype.createBinModel = function ( data, callback, texture
 
 			}
 
-		};
+		}
 
 	};
 
