@@ -1,23 +1,24 @@
 body {
-  background-color: #000000;
-  margin: 0px;
-  overflow: hidden;
+  background:#000;
+  color: #eee;
+  padding:0;
+  margin:0;
+  font-weight:bold;
+  overflow:hidden;
   font-family:Monospace;
   font-size:13px;
   text-align:center;
-  font-weight: bold;
 }
-
-a {
-  color:#0078ff;
-}
-
 #info {
-  color:#fff;
-  position: relative;
-  top: 0px;
-  width: 50em;
-  margin: 0 auto -2.1em;
+  position: absolute;
+  top: 0px; width: 100%;
   padding: 5px;
   z-index:100;
+}
+a {
+  color: #0080ff;
+}
+
+.dg.ac {
+  z-index: 100;
 }

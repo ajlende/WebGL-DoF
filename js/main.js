@@ -6,9 +6,15 @@
 
 
 // main.js
+var container, dof;
+
 var scene, camera, controls, renderer, loader, postprocessing = {};
 
+var degrees = Math.PI / 180;
+
 var WIDTH, HEIGHT;
+
+var webGLElement = document.querySelector('#WebGL-output');
 
 var clock = new THREE.Clock();
 
@@ -35,12 +41,13 @@ function init() {
 
   // Add a renderer to the body
   renderer = new THREE.WebGLRenderer({antialias:false});
+  renderer.setClearColor(new THREE.Color(0x888, 1.0));
   renderer.setSize(WIDTH, HEIGHT);
 
   renderer.shadowMapEnabled = true;
   renderer.shadowMapSoft = true;
 
-  document.body.appendChild(renderer.domElement);
+  renderer.autoClear = false;
 
   // The scene
   scene = new THREE.Scene();
@@ -50,18 +57,24 @@ function init() {
 
 
   //////////////////////////////////////////////////////////////////////////////
-  //  CAMERA                                                                  //
+  //  CAMERA / CAMERA CONTROLS                                                //
   //////////////////////////////////////////////////////////////////////////////
 
   camera = new THREE.PerspectiveCamera( 45, WIDTH / HEIGHT, 0.1, 50000 );
   camera.translateX(695-63);
-  camera.translateY(170-3);
+  camera.translateY(10);
   camera.translateX(-21-35);
-  camera.rotateX(-176);
-  camera.rotateY(82);
-  camera.rotateZ(-180);
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-  scene.add(camera);
+  // controls = new THREE.FlyControls(camera);
+  // controls.movementSpeed = 1000;
+  // controls.rollSpeed = 1;
+  // controls.autoForward = false;
+  // controls.dragToLook = true;
+
+  webGLElement.appendChild(renderer.domElement);
+
+  // scene.add(camera);
 
 
   // Resize everything when the window resizes
@@ -111,22 +124,21 @@ function init() {
   //////////////////////////////////////////////////////////////////////////////
 
   var directionalLight = new THREE.DirectionalLight(0xFFFFE4, 2);
-  directionalLight.shadowCameraVisible = true;
+  // directionalLight.shadowCameraVisible = true;
   directionalLight.castShadow = true;
   directionalLight.shadowBias = 0;
-  directionalLight.shadowDarkness = 0.7;
+  directionalLight.shadowDarkness = 0.5;
   directionalLight.shadowCameraNear = 0.1;
   directionalLight.shadowCameraFar = 3000;
   directionalLight.shadowMapWidth = 512;
   directionalLight.shadowMapHeight = 512;
-  directionalLight.shadowCameraLeft = -1500;
-  directionalLight.shadowCameraRight = 1500;
-  directionalLight.shadowCameraTop = 1000;
-  directionalLight.shadowCameraBottom = -1000;
+  directionalLight.shadowCameraLeft = -1000;
+  directionalLight.shadowCameraRight = 1000;
+  directionalLight.shadowCameraTop = 1500;
+  directionalLight.shadowCameraBottom = -1500;
   directionalLight.up = new THREE.Vector3( 0, 1, 0 );
   directionalLight.translateY(1952);
-  directionalLight.translateZ(-34);
-  directionalLight.rotateX(-101);
+  directionalLight.rotation.set(1, 1, 0);
   scene.add(directionalLight);
 
   var hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFC87F, 0.9);
@@ -138,42 +150,39 @@ function init() {
   //////////////////////////////////////////////////////////////////////////////
 
   initPostProcessing();
-  renderer.autoClear = false;
+  //renderer.autoClear = false;
 
 
   //////////////////////////////////////////////////////////////////////////////
   //  CONTROLS                                                                //
   //////////////////////////////////////////////////////////////////////////////
 
-  // controls = new THREE.FirstPersonControls(camera, renderer.domElement);
-  // controls.activeLook = true;
-  // controls.lookSpeed = 0.05;
-  // controls.movementSpeed = 300;
-  // controls.lookVertical = false;
-
-  controls = new THREE.PointerLockControls( camera );
-  scene.add( controls.getObject() );
-
   var DepthOfField = function() {
     this.enableDoF = true;
-    this.focus = 1.0;
+    this.focus = 1.001;
     this.aperture = 0.025;
     this.maxblur = 1.0;
   };
 
-  var matChanger = function( effectController ) {
-    postprocessing.bokeh.uniforms[ "focus" ].value = effectController.focus;
-    postprocessing.bokeh.uniforms[ "aperture" ].value = effectController.aperture;
-    postprocessing.bokeh.uniforms[ "maxblur" ].value = effectController.maxblur;
+  var updateFocus = function(value) {
+    postprocessing.bokeh.uniforms[ "focus" ].value = dof.focus;
+  };
+
+  var updateAperature = function(value) {
+    postprocessing.bokeh.uniforms[ "aperture" ].value = dof.aperture;
+  };
+
+  var updateMaxBlur = function(value) {
+    postprocessing.bokeh.uniforms[ "maxblur" ].value = dof.maxblur;
   };
 
   window.onload = function() {
-    var dof = new DepthOfField();
+    dof = new DepthOfField();
     var gui = new dat.GUI();
     gui.add(dof, 'enableDoF');
-    gui.add(dof, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger(dof) );
-    gui.add(dof, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger(dof) );
-    gui.add(dof, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger(dof) );
+    gui.add(dof, "focus", 0.99, 1.01).step(0.001).onChange( updateFocus );
+    gui.add(dof, "aperture", 0.001, 2).onChange( updateAperature );
+    gui.add(dof, "maxblur", 0.0, 3.0).onChange( updateMaxBlur );
   };
 
 }
@@ -189,22 +198,22 @@ function loadScene(scene) {
   loader.statusDomElement.style.width = "250px";
 
   document.body.appendChild( loader.statusDomElement );
-  loader.showProgress =true;
+  loader.showProgress = true;
   loader.load( 'models/sponza/sponza.js', callbackFinished, 'models/sponza/textures/' );
 
-  function callbackFinished( geometry, materials ) {
+}
 
-    var faceMaterial = new THREE.MeshFaceMaterial();
-    faceMaterial.materials = materials;
+function callbackFinished( geometry, materials ) {
 
-    var mesh = new THREE.Mesh( geometry, faceMaterial );
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+  var faceMaterial = new THREE.MeshFaceMaterial();
+  faceMaterial.materials = materials;
 
-    scene.add( mesh );
-    loader.statusDomElement.style.display = "none";
-  }
+  var mesh = new THREE.Mesh( geometry, faceMaterial );
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
 
+  scene.add( mesh );
+  loader.statusDomElement.style.display = "none";
 }
 
 function initPostProcessing() {
@@ -212,8 +221,8 @@ function initPostProcessing() {
   var renderPass = new THREE.RenderPass(scene, camera);
   var bokehPass = new THREE.BokehPass(scene, camera, {
     focus: 1.0,
-    aperture:	0.025,
-    maxblur:	1.0,
+    aperture: 0.75,
+    maxblur: 10.0,
     width: WIDTH,
     height: HEIGHT
   });
@@ -222,16 +231,15 @@ function initPostProcessing() {
 
   composer.addPass( renderPass );
   composer.addPass( bokehPass );
+
   postprocessing.composer = composer;
   postprocessing.bokeh = bokehPass;
 }
 
 function animate() {
+  // controls.update(clock.getDelta());
+  renderer.clear();
   requestAnimationFrame(animate);
-
-  // renderer.render(scene, camera);
-  postprocessing.composer.render( 0.1 );
-
-  controls.isOnObject( false );
-  controls.update(clock.getDelta());
+  if (!dof.enableDoF) renderer.render(scene, camera);
+  else postprocessing.composer.render( 5 );
 }
