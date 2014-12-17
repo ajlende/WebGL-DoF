@@ -1,7 +1,7 @@
 /* jshint sub: true */
 /* jshint browser: true*/
 /* global THREE:true */
-/* global dat: true*/
+/* global dat: true */
 'use strict';
 
 
@@ -204,6 +204,7 @@ function init() {
     this.focus = 1.001;
     this.aperture = 0.75;
     this.maxblur = 0.01;
+    this.shape = THREE.BokehShader.shapes[ 'CIRCLE' ];
   };
 
   var updateFocus = function(value) {
@@ -218,6 +219,10 @@ function init() {
     postprocessing.bokeh.uniforms[ "maxblur" ].value = dof.maxblur;
   };
 
+  var updateShape = function(value) {
+    postprocessing.bokeh.uniforms[ "shape" ].value = dof.shape;
+  };
+
   window.onload = function() {
     dof = new DepthOfField();
     var gui = new dat.GUI({domElement: guiElement});
@@ -225,6 +230,7 @@ function init() {
     gui.add(dof, "focus", 0.99, 1.01).step(0.001).onChange( updateFocus );
     gui.add(dof, "aperture", 0.001, 2).onChange( updateAperature );
     gui.add(dof, "maxblur", 0.0, 0.02).onChange( updateMaxBlur );
+    gui.add(dof, "shape", THREE.BokehShader.shapes).onChange( updateShape )
   };
 
 }
@@ -260,6 +266,8 @@ function callbackFinished( geometry, materials ) {
 }
 
 function initPostProcessing() {
+  console.log(THREE.BokehPass);
+
   var composer = new THREE.EffectComposer(renderer);
   var renderPass = new THREE.RenderPass(scene, camera);
   var bokehPass = new THREE.BokehPass(scene, camera, {
@@ -267,7 +275,8 @@ function initPostProcessing() {
     aperture: 0.75,
     maxblur: 0.01,
     width: WIDTH,
-    height: HEIGHT
+    height: HEIGHT,
+    shape: THREE.BokehShader.shapes[ 'CIRCLE' ]
   });
 
   bokehPass.renderToScreen = true;

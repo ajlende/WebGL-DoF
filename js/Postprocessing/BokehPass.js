@@ -12,6 +12,7 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	var aspect = ( params.aspect !== undefined ) ? params.aspect : camera.aspect;
 	var aperture = ( params.aperture !== undefined ) ? params.aperture : 0.025;
 	var maxblur = ( params.maxblur !== undefined ) ? params.maxblur : 1.0;
+	var shape = ( params.shape !== undefined ) ? params.shape : 0;
 
 	// render targets
 
@@ -35,7 +36,7 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	if ( THREE.BokehShader === undefined ) {
 		console.error( "THREE.BokehPass relies on THREE.BokehShader" );
 	}
-	
+
 	var bokehShader = THREE.BokehShader;
 	var bokehUniforms = THREE.UniformsUtils.clone( bokehShader.uniforms );
 
@@ -45,6 +46,7 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	bokehUniforms[ "aspect" ].value = aspect;
 	bokehUniforms[ "aperture" ].value = aperture;
 	bokehUniforms[ "maxblur" ].value = maxblur;
+	bokehUniforms[ "shape" ].value = shape;
 
 	this.materialBokeh = new THREE.ShaderMaterial({
 		uniforms: bokehUniforms,
@@ -97,4 +99,3 @@ THREE.BokehPass.prototype = {
 	}
 
 };
-
